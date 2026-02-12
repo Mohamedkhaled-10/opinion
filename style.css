@@ -1,0 +1,178 @@
+/* =========================================================
+   style.css — App-like Android UI for the poll
+   - mobile-first, each question is a slide
+   - material-like buttons with ripple
+   - progress bar, swipe support, keyboard navigation
+   - SVG icons used (no emoji)
+   - تعليقات بالعربية في الأماكن المهمة
+   ========================================================= */
+
+/* متغيرات */
+:root{
+  --bg: #f5f7fb;
+  --card: #ffffff;
+  --text: #0f1724;
+  --muted: #6b7280;
+  --accent: #1a73e8;
+  --accent-600: #1464cc;
+  --surface-shadow: 0 10px 30px rgba(15,23,42,0.08);
+  --radius: 16px;
+  --container-pad: 18px;
+  --swipe-threshold: 40px;
+  --transition: 240ms cubic-bezier(.2,.9,.35,1);
+  font-size: 16px;
+  font-family: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+}
+
+/* ثيم ليلي */
+.dark {
+  --bg: #071225;
+  --card: linear-gradient(180deg,#081523,#04121a);
+  --text: #e6eef6;
+  --muted: #9aa4b2;
+  --accent: #6ee7b7;
+  --accent-600: #4fd1c5;
+  --surface-shadow: 0 16px 44px rgba(2,6,23,0.6);
+}
+
+/* قواعد عامة */
+*{box-sizing:border-box}
+html,body{height:100%; margin:0; background:var(--bg); color:var(--text); -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;}
+.container{max-width:920px; margin:0 auto; padding:var(--container-pad);}
+
+/* topbar */
+.topbar{position:sticky; top:0; backdrop-filter: blur(6px); z-index:30; background:transparent;}
+.topbar-inner{display:flex; align-items:center; justify-content:space-between; gap:12px; padding:10px 0;}
+.brand{display:flex; gap:12px; align-items:center;}
+.brand-icon{width:44px;height:44px;border-radius:10px; box-shadow:var(--surface-shadow)}
+.brand-title{font-weight:700; font-size:1.05rem}
+.top-actions{display:flex; gap:8px; align-items:center;}
+.icon-btn{background:transparent;border:0;padding:8px;border-radius:10px;cursor:pointer;color:var(--text)}
+.lang-toggle{color:var(--muted); text-decoration:none; padding:6px 8px; border-radius:8px}
+
+/* card (app screen) */
+.app-frame{display:flex; justify-content:center; margin-top:8px;}
+.app-card{
+  width:100%;
+  max-width:760px;
+  border-radius:20px;
+  padding:18px;
+  background:var(--card);
+  box-shadow:var(--surface-shadow);
+  transition:transform var(--transition), box-shadow var(--transition);
+}
+
+/* title */
+.app-title{margin:0; font-size:1.4rem; font-weight:700}
+.app-sub{margin:6px 0 14px 0; color:var(--muted); font-size:0.95rem}
+
+/* progress bar */
+.progress{height:8px; background:rgba(15,23,42,0.04); border-radius:999px; overflow:hidden; margin-bottom:16px}
+.progress-bar{height:100%; background:linear-gradient(90deg,var(--accent),var(--accent-600)); width:0%; transition:width 320ms ease}
+
+/* النموذج والسلايد */
+.poll-form{position:relative; overflow:hidden;}
+.poll-form fieldset{
+  min-height:240px;
+  padding:18px;
+  border-radius:12px;
+  border: none;
+  background:transparent;
+  transition: transform var(--transition), opacity var(--transition);
+  position:absolute;
+  left:0;
+  right:0;
+  top:0;
+  opacity:0;
+  transform: translateX(10%);
+  pointer-events:none;
+  display:block;
+}
+
+/* السلايد النشط */
+.poll-form fieldset.active{
+  opacity:1;
+  transform:translateX(0);
+  pointer-events:all;
+  position:relative;
+}
+
+/* السلايد السابق (للخروج لليسار) */
+.poll-form fieldset.left{
+  opacity:0;
+  transform:translateX(-10%);
+}
+
+/* legend (سطر السؤال مع أيقونة) */
+legend{display:flex; align-items:center; gap:12px; margin:0 0 12px 0; font-weight:700}
+.question-svg{width:42px;height:42px;border-radius:10px; padding:8px; background:linear-gradient(135deg,var(--accent),var(--accent-600)); color:#fff; flex-shrink:0}
+
+/* options */
+.options{display:flex; gap:10px; flex-wrap:wrap}
+.radio-col{flex-direction:column; display:flex}
+.poll-option{
+  display:flex; align-items:center; gap:12px; padding:12px 14px; border-radius:12px; background: rgba(0,0,0,0.03);
+  cursor:pointer; transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease;
+  user-select:none; border:1px solid transparent;
+}
+.poll-option input{margin:0; cursor:pointer}
+.poll-option .opt-label{font-size:1rem}
+
+/* عند hover or focus (تحسين لمس) */
+.poll-option:hover{transform: translateY(-3px); box-shadow: 0 8px 24px rgba(2,6,23,0.06)}
+.poll-option:focus-within{outline:2px solid rgba(26,115,232,0.12); outline-offset:4px; border-radius:12px}
+
+/* نمط العنصر المحدد — سيتم إظهاره عبر :has عندما تكون مدعومة أو عبر JS */
+.poll-option.selected{ background: linear-gradient(90deg,var(--accent),var(--accent-600)); color:#fff }
+.poll-option.selected .opt-label{ color:#fff }
+
+/* scale */
+.scale-row{display:flex; gap:10px; align-items:center}
+.scale-item{display:inline-grid; place-items:center; width:46px; height:46px; border-radius:10px; border:1px solid rgba(15,23,42,0.06); cursor:pointer; font-weight:700}
+.scale-item input{display:none}
+.scale-item input:checked + span{ background:linear-gradient(90deg,var(--accent),var(--accent-600)); color:#fff; padding:10px 12px; border-radius:10px}
+
+/* consent */
+.consent-block{padding:8px 4px}
+.consent-label{display:flex; gap:10px; align-items:flex-start; font-size:0.98rem}
+
+/* الرسائل */
+.form-message{margin-top:14px; color:var(--muted)}
+.form-message.error{ color:var(--danger); font-weight:700 }
+
+/* nav bar (prev / next) */
+.nav-bar{display:flex; align-items:center; justify-content:space-between; gap:10px; margin-top:18px}
+.btn{display:inline-flex; align-items:center; gap:8px; padding:10px 14px; border-radius:12px; cursor:pointer; border:0; font-weight:700; transition:transform 140ms ease}
+.btn:active{transform:translateY(1px)}
+.btn-prev{background:transparent; color:var(--text); border:1px solid rgba(15,23,42,0.06); padding:10px 12px}
+.btn-next{background:var(--accent); color:white; box-shadow: 0 12px 30px rgba(26,115,232,0.16)}
+.step-counter{font-weight:600; color:var(--muted)}
+
+/* زر الإرسال النهائي (عندما نكون في آخر سلايد) */
+.submit-final{background:linear-gradient(90deg,var(--accent),var(--accent-600)); color:white; padding:12px 18px; border-radius:14px; font-weight:800; border:0}
+
+/* footer */
+.site-footer{margin-top:20px; color:var(--muted); font-size:0.9rem; text-align:center}
+
+/* ردود فعل صغيرة (ripple) */
+.ripple {
+  position:relative; overflow:hidden;
+}
+.ripple::after{
+  content:""; position:absolute; width:0; height:0; border-radius:50%; opacity:0.15; transform:translate(-50%,-50%); pointer-events:none;
+  background:var(--accent);
+  transition:width 420ms ease, height 420ms ease, opacity 420ms ease;
+}
+.ripple.activated::after{ width:260px; height:260px; opacity:0; transition:width 420ms ease, height 420ms ease, opacity 420ms ease; }
+
+/* responsive tweaks */
+@media (min-width:720px){
+  .app-card{ padding:24px; }
+  .poll-form fieldset{ min-height:320px }
+  .question-svg{ width:48px; height:48px }
+  .poll-option{ padding:14px 16px }
+}
+@media (max-width:420px){
+  .question-svg{ width:40px; height:40px }
+  .poll-option{ padding:12px; gap:10px }
+}

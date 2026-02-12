@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="ar">
+<head>
+  <!-- META & SEO -->
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>استطلاع رأي — تجربة App-like</title>
+  <meta name="description" content="استطلاع رأي بتصميم شبيه بتطبيق أندرويد — كل سؤال في سلايد واحد. لا نجمع بيانات شخصية." />
+  <link rel="canonical" href="https://your-site.example/index.html" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <!-- ملف الأنماط -->
+  <link rel="stylesheet" href="style.css">
+  <!-- أيقونات (لنستخدم SVG داخلية لكن Font Awesome يمكن أن يبقى كخيار) -->
+  <!-- canonical / hreflang -->
+  <link rel="alternate" hreflang="en" href="../en/index_en.html">
+  <link rel="alternate" hreflang="ar" href="index.html">
+</head>
+<body>
+  <!--
+    تعليق بالعربية:
+    - صفحة واجهة تشبه تطبيق: شريط علوي بسيط، بطاقة وسطية كبيرة تحتوي على السلايد.
+    - كل سؤال داخل <fieldset> (كما طلبت) لكن مصمم كسلايد.
+    - استبدل {FORM_ID} بالمعرّف الخاص بك في Formspree.
+  -->
+
+  <header class="topbar">
+    <div class="topbar-inner container">
+      <div class="brand">
+        <!-- أيقونة شعار (SVG) -->
+        <svg class="brand-icon" viewBox="0 0 24 24" aria-hidden="true"><rect rx="6" width="24" height="24" fill="url(#g)"/><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1a73e8"/><stop offset="1" stop-color="#1464cc"/></linearGradient></defs></svg>
+        <span class="brand-title">استطلاع</span>
+      </div>
+
+      <div class="top-actions">
+        <!-- زر تبديل الوضع -->
+        <button id="themeToggle" class="icon-btn" aria-label="تبديل الوضع">
+          <!-- أيقونة قمر/شمس (سيتغير عبر JS) -->
+          <svg class="icon moon" viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+        </button>
+
+        <!-- تبديل اللغة -->
+        <a class="lang-toggle" href="../en/index_en.html" aria-label="English version">English</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container app-frame" role="main">
+    <!-- بطاقة كبيرة تمثل شاشة التطبيق -->
+    <section class="app-card" aria-labelledby="poll-title">
+      <h1 id="poll-title" class="app-title">استطلاع رأي</h1>
+      <p class="app-sub">كل سؤال في شاشة منفصلة — استخدم الأسهم أو اسحب للتنقل. لا نجمع أسماء أو إيميلات.</p>
+
+      <!-- progress -->
+      <div class="progress" aria-hidden="true">
+        <div class="progress-bar" id="progressBar" style="width:0%"></div>
+      </div>
+
+      <!-- النموذج: action توجه إلى Formspree -->
+      <form id="pollForm" method="POST" action="https://formspree.io/f/xpwdponz" class="poll-form" novalidate>
+        <!-- حقول مخفية -->
+        <input type="hidden" name="_next" value="thankyou_ar.html">
+        <input type="hidden" name="_format" value="plain">
+
+        <!-- S L I D E S: كل fieldset يمثل سلايد -->
+        <!-- Slide 0: gender -->
+        <fieldset aria-label="سؤال 1" data-step="1">
+          <legend>
+            <!-- أيقونة SVG بدل الإيموجي -->
+            <svg class="question-svg" viewBox="0 0 24 24" width="28" height="28" aria-hidden="true"><path fill="currentColor" d="M12 12a5 5 0 100-10 5 5 0 000 10zM2 22a10 10 0 0120 0H2z"/></svg>
+            <span class="legend-text">انت ذكر ولا أنثى؟</span>
+          </legend>
+
+          <div class="options radio-col">
+            <label class="poll-option"><input type="radio" name="gender" value="ذكر"><span class="opt-label">ذكر</span></label>
+            <label class="poll-option"><input type="radio" name="gender" value="أنثى"><span class="opt-label">أنثى</span></label>
+          </div>
+        </fieldset>
+
+        <!-- Slide 1: q1 -->
+        <fieldset aria-label="سؤال 2" data-step="2">
+          <legend>
+            <svg class="question-svg" viewBox="0 0 24 24" width="28" height="28" aria-hidden="true"><path fill="currentColor" d="M12 2l3 7h7l-5.6 4 2 7L12 16l-6.4 4 2-7L2 9h7z"/></svg>
+            <span class="legend-text">هل تضن أن تعطيل الإنجاب للرجال إجراء مقبول؟</span>
+          </legend>
+
+          <div class="options radio-col">
+            <label class="poll-option"><input type="radio" name="q1" value="نعم"><span class="opt-label">نعم</span></label>
+            <label class="poll-option"><input type="radio" name="q1" value="لا"><span class="opt-label">لا</span></label>
+            <label class="poll-option"><input type="radio" name="q1" value="محايد"><span class="opt-label">محايد</span></label>
+          </div>
+        </fieldset>
+
+        <!-- Slide 2: q2 -->
+        <fieldset data-step="3">
+          <legend>
+            <svg class="question-svg" viewBox="0 0 24 24" width="28" height="28" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 100 20 10 10 0 000-20z"/></svg>
+            <span class="legend-text">لو كان قابل للعكس، هل توافق عليه؟</span>
+          </legend>
+
+          <div class="options radio-col">
+            <label class="poll-option"><input type="radio" name="q2" value="نعم"><span class="opt-label">نعم</span></label>
+            <label class="poll-option"><input type="radio" name="q2" value="لا"><span class="opt-label">لا</span></label>
+            <label class="poll-option"><input type="radio" name="q2" value="مش متأكد"><span class="opt-label">مش متأكد</span></label>
+          </div>
+        </fieldset>
+
+        <!-- Slide 3: q3 -->
+        <fieldset data-step="4">
+          <legend>
+            <svg class="question-svg" viewBox="0 0 24 24" width="28" height="28" aria-hidden="true"><path fill="currentColor" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 6 4 4 6.5 4c1.74 0 3.41 1 4.5 2.09A6.99 6.99 0 0117.5 4C20 4 22 6 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+            <span class="legend-text">هل توافق أن يتم استخدام هذا كوسيلة للرد على أذى تاريخي؟</span>
+          </legend>
+
+          <div class="options radio-col">
+            <label class="poll-option"><input type="radio" name="q3" value="نعم"><span class="opt-label">نعم</span></label>
+            <label class="poll-option"><input type="radio" name="q3" value="لا"><span class="opt-label">لا</span></label>
+            <label class="poll-option"><input type="radio" name="q3" value="محايد"><span class="opt-label">محايد</span></label>
+          </div>
+        </fieldset>
+
+        <!-- Slide 4: q4 scale -->
+        <fieldset data-step="5">
+          <legend>
+            <svg class="question-svg" viewBox="0 0 24 24" width="28" height="28" aria-hidden="true"><path fill="currentColor" d="M3 13h2v-2H3v2zm4 0h2v-2H7v2zm4 0h6v-2h-6v2zM3 17h2v-2H3v2zm4 0h2v-2H7v2z"/></svg>
+            <span class="legend-text">هل تثق بالأبحاث الطبية المتعلقة بهذا الإجراء؟ (1 ضعيف — 5 قوي)</span>
+          </legend>
+
+          <div class="options scale-row" role="radiogroup" aria-label="مقياس 1 إلى 5">
+            <label class="scale-item"><input type="radio" name="q4" value="1"><span>1</span></label>
+            <label class="scale-item"><input type="radio" name="q4" value="2"><span>2</span></label>
+            <label class="scale-item"><input type="radio" name="q4" value="3"><span>3</span></label>
+            <label class="scale-item"><input type="radio" name="q4" value="4"><span>4</span></label>
+            <label class="scale-item"><input type="radio" name="q4" value="5"><span>5</span></label>
+          </div>
+        </fieldset>
+
+        <!-- Slide 5: q5 -->
+        <fieldset data-step="6">
+          <legend>
+            <svg class="question-svg" viewBox="0 0 24 24" width="28" height="28" aria-hidden="true"><path fill="currentColor" d="M12 2l3 7h7l-5.6 4 2 7L12 16l-6.4 4 2-7L2 9h7z"/></svg>
+            <span class="legend-text">هل تفضل أن تُفرض خيارات على الرجال أم تكون طوعية؟</span>
+          </legend>
+
+          <div class="options radio-col">
+            <label class="poll-option"><input type="radio" name="q5" value="مفروضة"><span class="opt-label">مفروضة</span></label>
+            <label class="poll-option"><input type="radio" name="q5" value="طوعية فقط"><span class="opt-label">طوعية فقط</span></label>
+            <label class="poll-option"><input type="radio" name="q5" value="لا أعرف"><span class="opt-label">لا أعرف</span></label>
+          </div>
+        </fieldset>
+
+        <!-- Slide 6: q6 -->
+        <fieldset data-step="7">
+          <legend>
+            <svg class="question-svg" viewBox="0 0 24 24" width="28" height="28" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 110 20 10 10 0 010-20z"/></svg>
+            <span class="legend-text">هل تعتقد أن القرار يجب أن يخضع لقانون / تشريع؟</span>
+          </legend>
+
+          <div class="options radio-col">
+            <label class="poll-option"><input type="radio" name="q6" value="نعم"><span class="opt-label">نعم</span></label>
+            <label class="poll-option"><input type="radio" name="q6" value="لا"><span class="opt-label">لا</span></label>
+            <label class="poll-option"><input type="radio" name="q6" value="محايد"><span class="opt-label">محايد</span></label>
+          </div>
+        </fieldset>
+
+        <!-- Slide 7: consent -->
+        <fieldset data-step="8">
+          <legend>
+            <svg class="question-svg" viewBox="0 0 24 24" width="28" height="28" aria-hidden="true"><path fill="currentColor" d="M9 16.17l-3.88-3.88L4 13.41 9 18.41 20 7.41 18.59 6 9 16.17z"/></svg>
+            <span class="legend-text">موافقتك</span>
+          </legend>
+
+          <div class="consent-block">
+            <label class="consent-label"><input type="checkbox" name="consent" id="consent"> أوافق على تسجيل ردودي واستخدامها لأغراض إحصائية فقط. (لا يتم جمع أسماء أو إيميلات)</label>
+          </div>
+        </fieldset>
+
+        <!-- area for messages -->
+        <div id="formMessage" class="form-message" role="status" aria-live="polite"></div>
+
+        <!-- أزرار التنقّل العامة أسفل (Prev / Next) — يتم التحكم بها عبر JS -->
+        <div class="nav-bar">
+          <button type="button" id="prevBtn" class="btn btn-prev" aria-label="السابق">
+            <!-- SVG أيقونة رجوع -->
+            <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+            السابق
+          </button>
+
+          <div class="nav-right">
+            <div class="step-counter" id="stepCounter">1 / 8</div>
+            <button type="button" id="nextBtn" class="btn btn-next" aria-label="التالي">
+              التالي
+              <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>
+            </button>
+          </div>
+        </div>
+
+      </form>
+    </section>
+  </main>
+
+  <footer class="site-footer container">
+    <small>© حقوق النشر — مشروع استطلاع</small>
+  </footer>
+
+  <script defer src="script.js"></script>
+</body>
+</html>
